@@ -12,7 +12,8 @@ async function main(){
         await client.connect();
  
         // Make the appropriate DB calls
-       return await  listDatabases(client);
+       list = await  listDatabases(client);
+       return list;
  
     } catch (e) {
         console.error(e);
@@ -20,36 +21,21 @@ async function main(){
         await client.close();
     }
 }
+
 async function listDatabases(client){
-
     base = await client.db("habitanto_data");
- 
-    console.log("conexion a la base de datos");
-
-    return  await base.collection("NotificationApp").find().limit(1);
-
+    result = await base.collection("NotificationApp").find().limit(10);
+    return result.toArray();
 };
 
 
 
 
 module.exports = async function (context, req) {
-
-    let list_notificaciones = await main().catch(console.error);
-    context.log('JavaScript HTTP trigger function processed a request.  ');
-
-    const name = (req.query.name || (req.body && req.body.name));
-    const responseMessage = {
-        "result": "datos"
-    };
-
-    list_notificaciones.each( notificaction_row => {
-        console.log(notificaction_row);
-    });
-
+    let result_list = await main().catch(console.error);
 
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: responseMessage
+        body: result_list
     };
 }
