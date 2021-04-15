@@ -24,7 +24,7 @@ async function main(){
 
 async function listDatabases(client){
     base = await client.db("habitanto_data");
-    result = await base.collection("NotificationApp").find().limit(1000);
+    result = await base.collection("NotificationApp").find().limit(100);
     return result.toArray();
 };
 
